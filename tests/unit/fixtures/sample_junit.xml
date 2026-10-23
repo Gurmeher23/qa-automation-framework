@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites name="pytest tests">
+  <testsuite name="pytest" errors="1" failures="6" skipped="1" tests="10">
+    <testcase classname="tests.ui.test_orders" name="test_create_order" time="5.1">
+      <failure message="playwright._impl._errors.TimeoutError: Locator.click: Timeout 30000ms exceeded.">
+self = &lt;tests.ui.pages.orders_page.NewOrderPage object at 0x10a1b2c30&gt;
+    def submit(self, customer, item, quantity):
+&gt;       self.page.get_by_role("button", name="Create order").click()
+/home/runner/work/qa/tests/ui/pages/orders_page.py:48: in submit
+E   playwright._impl._errors.TimeoutError: Locator.click: Timeout 30000ms exceeded.
+E   Call log:
+E     - waiting for get_by_role("button", name="Create order")
+      </failure>
+    </testcase>
+    <testcase classname="tests.ui.test_orders" name="test_validation[no-item]" time="5.3">
+      <failure message="playwright._impl._errors.TimeoutError: Locator.click: Timeout 30000ms exceeded.">
+self = &lt;tests.ui.pages.orders_page.NewOrderPage object at 0x10a9f2d10&gt;
+&gt;       self.page.get_by_role("button", name="Create order").click()
+/home/runner/work/qa/tests/ui/pages/orders_page.py:48: in submit
+E   playwright._impl._errors.TimeoutError: Locator.click: Timeout 30000ms exceeded.
+E   Call log:
+E     - waiting for get_by_role("button", name="Create order")
+      </failure>
+    </testcase>
+    <testcase classname="tests.ui.test_admin" name="test_status_filter[paid]" time="6.0">
+      <failure message="playwright._impl._errors.TimeoutError: Locator.click: Timeout 30000ms exceeded.">
+self = &lt;tests.ui.pages.orders_page.NewOrderPage object at 0x7f00aa11bb22&gt;
+&gt;       self.page.get_by_role("button", name="Create order").click()
+/tmp/build-77/tests/ui/pages/orders_page.py:48: in submit
+E   playwright._impl._errors.TimeoutError: Locator.click: Timeout 30000ms exceeded.
+E   Call log:
+E     - waiting for get_by_role("button", name="Create order")
+      </failure>
+    </testcase>
+    <testcase classname="tests.api.test_orders_crud" name="test_status_happy_path" time="0.2">
+      <failure message="assert 401 == 200">
+api = &lt;httpx.Client object at 0x10ccc1d90&gt;
+    def test_status_happy_path(api):
+        resp = api.patch("/api/orders/17", json={"status": "paid"})
+&gt;       assert resp.status_code == 200
+E       assert 401 == 200
+tests/api/test_orders_crud.py:61: AssertionError
+      </failure>
+    </testcase>
+    <testcase classname="tests.api.test_orders_crud" name="test_quantity_editable_only_while_new" time="0.2">
+      <failure message="assert 401 == 200">
+api = &lt;httpx.Client object at 0x10ccc1e50&gt;
+    def test_quantity_editable_only_while_new(api):
+        resp = api.patch("/api/orders/23", json={"quantity": 5})
+&gt;       assert resp.status_code == 200
+E       assert 401 == 200
+tests/api/test_orders_crud.py:61: AssertionError
+      </failure>
+    </testcase>
+    <testcase classname="tests.api.test_health" name="test_health" time="0.0">
+      <failure message="KeyError: 'status'">
+&gt;       assert resp.json()["status"] == "ok"
+E       KeyError: 'status'
+tests/api/test_health.py:9: KeyError
+      </failure>
+    </testcase>
+    <testcase classname="tests.ui.test_login" name="test_login" time="0.1">
+      <error message="httpx.ConnectError: [Errno 61] Connection refused">
+tests/conftest.py:60: in admin_api
+    resp = client.post("/api/auth/login", json={"username": "admin", "password": "x"})
+E   httpx.ConnectError: [Errno 61] Connection refused
+      </error>
+    </testcase>
+    <testcase classname="tests.api.test_auth" name="test_logout" time="0.1"/>
+    <testcase classname="tests.ui.test_login" name="test_skipped" time="0.0"><skipped message="not on stage"/></testcase>
+  </testsuite>
+</testsuites>
