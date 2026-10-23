@@ -1,0 +1,52 @@
+# GitLab CI equivalent of .github/workflows/ci.yml
+stages: [lint, test]
+
+default:
+  image: mcr.microsoft.com/playwright/python:v1.49.0-noble
+  before_script:
+    - pip install -r requirements.txt
+  cache:
+    paths: [.cache/pip]
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+lint:
+  stage: lint
+  script: [ruff check .]
+
+api-and-unit:
+  stage: test
+  script:
+    - pytest -n auto -m "api or unit" --junitxml=reports/junit-api.xml
+  artifacts:
+    when: always
+    paths: [reports/]
+    reports:
+      junit: reports/junit-api.xml
+
+ui:
+  stage: test
+  script:
+    - playwright install chromium
+    - pytest -n 2 -m ui --junitxml=reports/junit-ui.xml
+  after_script:
+    - python -m triage reports/junit-ui.xml || true
+  artifacts:
+    when: always
+    expire_in: 14 days
+    paths: [reports/]
+    reports:
+      junit: reports/junit-ui.xml
+
+smoke-on-merge-request:
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  script:
+    - playwright install chromium
+    - pytest -n 2 -m smoke --junitxml=reports/junit-smoke.xml
+  artifacts:
+    when: always
+    paths: [reports/]
+    reports:
+      junit: reports/junit-smoke.xml
