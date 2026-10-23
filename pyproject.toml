@@ -1,0 +1,52 @@
+[project]
+name = "qa-automation-framework"
+version = "1.0.0"
+description = "Playwright + pytest UI/API test-automation framework with a FastAPI app under test"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.115", "uvicorn>=0.30", "sqlalchemy>=2.0", "jinja2>=3.1",
+  "itsdangerous>=2.2", "python-multipart>=0.0.9", "pydantic>=2.7", "psycopg[binary]>=3.2",
+]
+
+[project.optional-dependencies]
+test = [
+  "pytest>=8.2", "pytest-xdist>=3.6", "pytest-html>=4.1", "pytest-playwright>=0.5",
+  "playwright>=1.45", "httpx>=0.27", "ruff>=0.5",
+]
+
+[tool.setuptools]
+packages = ["app", "triage"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = [
+  "--strict-markers",
+  "-ra",
+  "--html=reports/report.html",
+  "--self-contained-html",
+  "--junitxml=reports/junit.xml",
+  # Playwright: keep evidence only when a UI test fails.
+  "--screenshot=only-on-failure",
+  "--tracing=retain-on-failure",
+  "--output=reports/playwright",
+]
+markers = [
+  "api: HTTP API tests (applied automatically from tests/api)",
+  "ui: browser tests (applied automatically from tests/ui)",
+  "unit: pure-Python unit tests of the framework itself",
+  "smoke: minimal critical-path checks, run on every commit (< 1 min)",
+  "regression: full suite, run on merge requests and nightly",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ANN", "SIM"]
+ignore = ["ANN401", "B008"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["ANN"]
