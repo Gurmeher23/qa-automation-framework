@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}New order - Order Desk{% endblock %}
+{% block content %}
+<h1>New order</h1>
+{% if errors %}
+<div class="error" role="alert" data-testid="form-error">
+  <ul>{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul>
+</div>
+{% endif %}
+{# novalidate: the browser must not pre-empt the server-side validation we want to test #}
+<form method="post" action="/orders/new" novalidate>
+  <label for="customer">Customer</label>
+  <input id="customer" name="customer" value="{{ form.get('customer', '') }}">
+  <label for="item">Item</label>
+  <input id="item" name="item" value="{{ form.get('item', '') }}">
+  <label for="quantity">Quantity</label>
+  <input id="quantity" name="quantity" value="{{ form.get('quantity', '') }}">
+  <div><button type="submit">Create order</button></div>
+</form>
+{% endblock %}

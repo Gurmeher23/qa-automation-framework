@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Order Desk{% endblock %}</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; background: #f6f7f9; color: #1c2430; }
+    header { background: #1c2430; color: #fff; padding: 12px 24px; display: flex; gap: 16px; align-items: center; }
+    header a { color: #cfe3ff; text-decoration: none; }
+    header .spacer { flex: 1; }
+    main { max-width: 900px; margin: 24px auto; background: #fff; padding: 24px; border-radius: 8px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { text-align: left; padding: 8px; border-bottom: 1px solid #e3e6ea; }
+    label { display: block; margin: 12px 0 4px; }
+    input, select { padding: 8px; min-width: 240px; }
+    button { padding: 8px 16px; margin-top: 12px; cursor: pointer; }
+    .error { background: #fde8e8; color: #8a1c1c; padding: 8px 12px; border-radius: 4px; margin: 12px 0; }
+    .success { background: #e6f6ea; color: #1d5e2f; padding: 8px 12px; border-radius: 4px; margin: 12px 0; }
+  </style>
+</head>
+<body>
+<header>
+  <strong>Order Desk</strong>
+  {% if user %}
+  <a href="/orders" data-testid="nav-orders">Orders</a>
+  <a href="/orders/new" data-testid="nav-new">New order</a>
+  {% if user.role == "admin" %}<a href="/admin" data-testid="nav-admin">Admin</a>{% endif %}
+  <span class="spacer"></span>
+  <span data-testid="current-user">{{ user.username }}</span>
+  <form method="post" action="/logout" style="margin:0"><button type="submit" style="margin:0">Log out</button></form>
+  {% endif %}
+</header>
+<main>{% block content %}{% endblock %}</main>
+</body>
+</html>

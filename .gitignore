@@ -1,0 +1,16 @@
+.venv/
+venv/
+node_modules/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+reports/*
+!reports/.gitkeep
+*.db
+*.sqlite3
+.env
+.coverage
+htmlcov/
+test-results/
+*.egg-info/

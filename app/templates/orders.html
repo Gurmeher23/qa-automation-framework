@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Orders - Order Desk{% endblock %}
+{% block content %}
+<h1>My orders</h1>
+{% if request.query_params.get("created") %}
+<div class="success" role="status" data-testid="flash">Order {{ request.query_params.get("created") }} created</div>
+{% endif %}
+<p data-testid="order-count">{{ total }} order(s)</p>
+<table data-testid="orders-table">
+  <thead><tr><th>Reference</th><th>Customer</th><th>Item</th><th>Qty</th><th>Status</th></tr></thead>
+  <tbody>
+  {% for o in orders %}
+    <tr data-testid="order-row">
+      <td>{{ o.reference }}</td><td>{{ o.customer }}</td><td>{{ o.item }}</td><td>{{ o.quantity }}</td><td>{{ o.status }}</td>
+    </tr>
+  {% else %}
+    <tr><td colspan="5" data-testid="empty">No orders yet</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

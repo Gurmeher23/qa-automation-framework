@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Admin - Order Desk{% endblock %}
+{% block content %}
+<h1>Admin: all orders</h1>
+<label for="filter-text">Search customer or reference</label>
+<input id="filter-text" type="search">
+<label for="filter-status">Status</label>
+<select id="filter-status">
+  <option value="">All</option>
+  <option>new</option><option>paid</option><option>shipped</option><option>cancelled</option>
+</select>
+<p data-testid="visible-count"></p>
+<table data-testid="admin-table">
+  <thead><tr><th>Reference</th><th>Customer</th><th>Item</th><th>Qty</th><th>Status</th></tr></thead>
+  <tbody>
+  {% for o in orders %}
+    <tr data-testid="admin-row" data-status="{{ o.status }}">
+      <td>{{ o.reference }}</td><td>{{ o.customer }}</td><td>{{ o.item }}</td><td>{{ o.quantity }}</td><td>{{ o.status }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<script>
+  // Client-side filtering: text matches reference/customer, status matches exactly.
+  const text = document.getElementById("filter-text");
+  const status = document.getElementById("filter-status");
+  const rows = Array.from(document.querySelectorAll("[data-testid=admin-row]"));
+  const counter = document.querySelector("[data-testid=visible-count]");
+  function apply() {
+    const q = text.value.trim().toLowerCase();
+    let visible = 0;
+    for (const row of rows) {
+      const match = (!q || row.textContent.toLowerCase().includes(q)) &&
+                    (!status.value || row.dataset.status === status.value);
+      row.hidden = !match;
+      if (match) visible++;
+    }
+    counter.textContent = visible + " order(s) shown";
+  }
+  text.addEventListener("input", apply);
+  status.addEventListener("change", apply);
+  apply();
+</script>
+{% endblock %}
