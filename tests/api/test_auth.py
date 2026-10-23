@@ -85,7 +85,8 @@ def test_admin_user_creation_validates_input(admin_api, body):
 
 @pytest.mark.regression
 def test_password_material_is_never_returned(admin_api, api):
-    created = admin_api.post("/api/admin/users", json={"username": "leakcheck_" + seed_suffix(), "password": "password-123"})
+    body = {"username": "leakcheck_" + seed_suffix(), "password": "password-123"}
+    created = admin_api.post("/api/admin/users", json=body)
     for body in (created.text, api.get("/api/auth/me").text):
         assert "password" not in body.lower()
         assert "$" not in body  # stored hashes use salt$digest

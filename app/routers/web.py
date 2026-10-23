@@ -54,7 +54,9 @@ def logout(request: Request) -> RedirectResponse:
 
 
 @router.get("/orders", response_class=HTMLResponse, include_in_schema=False)
-def orders_page(request: Request, user: User | None = Depends(current_user_or_none), db: Session = Depends(get_db)):
+def orders_page(
+    request: Request, user: User | None = Depends(current_user_or_none), db: Session = Depends(get_db)
+) -> Response:
     if user is None:
         return RedirectResponse("/login", status_code=303)
     rows, total = services.list_orders(db, user, page=1, page_size=100, status=None)
@@ -62,7 +64,7 @@ def orders_page(request: Request, user: User | None = Depends(current_user_or_no
 
 
 @router.get("/orders/new", response_class=HTMLResponse, include_in_schema=False)
-def new_order_page(request: Request, user: User | None = Depends(current_user_or_none)):
+def new_order_page(request: Request, user: User | None = Depends(current_user_or_none)) -> Response:
     if user is None:
         return RedirectResponse("/login", status_code=303)
     return _render(request, "order_new.html", user, errors=[], form={})
@@ -76,7 +78,7 @@ def new_order_submit(
     quantity: str = Form(""),
     user: User | None = Depends(current_user_or_none),
     db: Session = Depends(get_db),
-):
+) -> Response:
     if user is None:
         return RedirectResponse("/login", status_code=303)
     form = {"customer": customer, "item": item, "quantity": quantity}
@@ -90,7 +92,9 @@ def new_order_submit(
 
 
 @router.get("/admin", response_class=HTMLResponse, include_in_schema=False)
-def admin_page(request: Request, user: User | None = Depends(current_user_or_none), db: Session = Depends(get_db)):
+def admin_page(
+    request: Request, user: User | None = Depends(current_user_or_none), db: Session = Depends(get_db)
+) -> Response:
     if user is None:
         return RedirectResponse("/login", status_code=303)
     if user.role != "admin":
